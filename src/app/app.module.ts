@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { NoticiasRecentesComponent } from './noticias-recentes/noticias-recentes.component';
@@ -11,14 +12,38 @@ import { LeitorDeNoticiaComponent } from './leitor-de-noticia/leitor-de-noticia.
 import { ListaDeNoticiasComponent } from './lista-de-noticias/lista-de-noticias.component';
 import { NoticiasComponent } from './noticias/noticias.component';
 import { SobreComponent } from './sobre/sobre.component';
+import { LoginComponent } from './login/login.component';
+import { AdminHomeComponent } from './admin-home/admin-home.component';
+import { AutenticacaoGuard } from './autenticacao.guard';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { AdminNoticiasComponent } from './admin-noticias/admin-noticias.component';
+import { AdminCadastrarNoticiaComponent } from './admin-cadastrar-noticia/admin-cadastrar-noticia.component';
+import { AdminCadastrarPessoaComponent } from './admin-cadastrar-pessoa/admin-cadastrar-pessoa.component';
+import { AdminPessoasComponent } from './admin-pessoas/admin-pessoas.component';
+import { AdminEditarPessoaComponent } from './admin-editar-pessoa/admin-editar-pessoa.component';
+import { AdminEditarNoticiaComponent } from './admin-editar-noticia/admin-editar-noticia.component';
 
 const rotas: Routes = [
-  {path: 'admin/noticias', component: ListaDeNoticiasComponent, },
-  {path: 'noticias/:id', component: LeitorDeNoticiaComponent, },
-  {path: 'noticias', component: NoticiasComponent, },
-  {path: 'sobre', component: SobreComponent, },
-  {path: '', component: NoticiasRecentesComponent, },
-  {path: '**', component: PaginaNaoEncontradaComponent}
+  { path: 'noticias/:id', component: LeitorDeNoticiaComponent, },
+  { path: 'noticias', component: NoticiasComponent, },
+  { path: 'sobre', component: SobreComponent, },
+  { path: 'login', component: LoginComponent, },
+  {
+    path: 'admin', component: AdminHomeComponent, 
+      canActivate: [AutenticacaoGuard], 
+      canActivateChild: [AutenticacaoGuard], 
+      children: [
+      { path: 'noticias/cadastrar', component: AdminCadastrarNoticiaComponent },
+      { path: 'noticias/editar/:id', component: AdminEditarNoticiaComponent},
+      { path: 'noticias', component: AdminNoticiasComponent },
+      { path: 'pessoas/cadastrar', component: AdminCadastrarPessoaComponent},
+      { path: 'pessoas/editar/:id', component: AdminEditarPessoaComponent},
+      { path: 'pessoas', component: AdminPessoasComponent},
+      { path: '', component: AdminDashboardComponent }
+    ]
+  },
+  { path: '', component: NoticiasRecentesComponent, },
+  { path: '**', component: PaginaNaoEncontradaComponent }
 ];
 
 @NgModule({
@@ -29,13 +54,23 @@ const rotas: Routes = [
     LeitorDeNoticiaComponent,
     ListaDeNoticiasComponent,
     NoticiasComponent,
-    SobreComponent
+    SobreComponent,
+    LoginComponent,
+    AdminHomeComponent,
+    AdminDashboardComponent,
+    AdminNoticiasComponent,
+    AdminCadastrarNoticiaComponent,
+    AdminCadastrarPessoaComponent,
+    AdminPessoasComponent,
+    AdminEditarPessoaComponent,
+    AdminEditarNoticiaComponent
   ],
   imports: [
     NgbModule,
     BrowserModule,
     FormsModule,
     RouterModule.forRoot(rotas),
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
